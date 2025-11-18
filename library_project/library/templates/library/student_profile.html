@@ -1,0 +1,46 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6" style="color: #475569;">My Profile: {{ user.username }}</h1>
+
+<h2 class="text-2xl font-semibold mb-4" style="color: #475569;">My Borrowing History</h2>
+
+<div class="bg-white shadow overflow-hidden rounded-lg">
+    <ul role="list" class="divide-y" style="border-color: #e2e8f0;">
+        {% for borrowing in borrowings %}
+        <li class="px-4 py-4 sm:px-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-lg font-medium truncate" style="color: #2563EB;">{{ borrowing.book.title }}</p>
+                    <p class="mt-1 text-sm" style="color: #64748b;">Requested on: {{ borrowing.request_date|date:"F j, Y" }}</p>
+                </div>
+                <div class="ml-4">
+                    {% if borrowing.status == 'PENDING' %}
+                        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium text-white" style="background-color: #fbbf24;">
+                            Pending
+                        </span>
+                    {% elif borrowing.status == 'APPROVED' %}
+                        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium text-white" style="background-color: #22C55E;">
+                            Approved
+                        </span>
+                        <p class="mt-1 text-xs" style="color: #64748b;">Approved on: {{ borrowing.approved_date|date:"F j, Y" }}</p>
+                    {% elif borrowing.status == 'REJECTED' %}
+                        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium text-white" style="background-color: #E11D48;">
+                            Rejected
+                        </span>
+                    {% elif borrowing.status == 'RETURNED' %}
+                         <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium text-white" style="background-color: #64748b;">
+                            Returned
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </li>
+        {% empty %}
+        <li class="px-4 py-4 sm:px-6">
+            <p class="text-center py-6" style="color: #64748b;">You have not borrowed or requested any books.</p>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

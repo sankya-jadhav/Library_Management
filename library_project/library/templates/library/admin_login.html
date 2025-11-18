@@ -1,0 +1,45 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+<div class="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-lg shadow-lg">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold" style="color: #475569;">
+                Admin Login
+            </h2>
+            <p class="text-center text-sm mt-2" style="color: #64748b;">
+                Access the library management dashboard
+            </p>
+        </div>
+        <form class="mt-8 space-y-6" method="POST">
+            {% csrf_token %}
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div style="background-color: {% if message.tags == 'error' %}#fee2e2{% else %}#f0fdf4{% endif %}; border-color: {% if message.tags == 'error' %}#fecaca{% else %}#86efac{% endif %}; color: {% if message.tags == 'error' %}#991b1b{% else %}#22c55e{% endif %};" class="border px-4 py-3 rounded-md">
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="rounded-md shadow-sm -space-y-px">
+                <div>
+                    <label for="username" class="sr-only">Username</label>
+                    <input id="username" name="username" type="text" required style="border-color: #cbd5e1; color: #334155;" class="appearance-none rounded-none relative block w-full px-3 py-2 border placeholder-gray-500 rounded-t-md focus:outline-none focus:z-10 sm:text-sm" placeholder="Username" onfocus="this.style.borderColor='#2563EB'; this.style.boxShadow='0 0 0 3px rgba(37, 99, 235, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                </div>
+                <div>
+                    <label for="password" class="sr-only">Password</label>
+                    <input id="password" name="password" type="password" required style="border-color: #cbd5e1; color: #334155;" class="appearance-none rounded-none relative block w-full px-3 py-2 border placeholder-gray-500 rounded-b-md focus:outline-none focus:z-10 sm:text-sm" placeholder="Password" onfocus="this.style.borderColor='#2563EB'; this.style.boxShadow='0 0 0 3px rgba(37, 99, 235, 0.1)'" onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none'">
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition" style="background-color: #2563EB;" onmouseover="this.style.backgroundColor='#1E40AF'" onmouseout="this.style.backgroundColor='#2563EB'">
+                    Sign in
+                </button>
+            </div>
+        </form>
+        <p class="text-sm text-center" style="color: #475569;">Don't have an admin account? <a href="{% url 'admin_register' %}" style="color: #2563EB;">Create one</a></p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+<div class="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-lg shadow-lg">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold" style="color: #475569;">
+                Create your account
+            </h2>
+        </div>
+        <form class="mt-8 space-y-6" method="POST">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="rounded-md shadow-sm -space-y-px">
+                <div class="mb-4">
+                    <label for="id_username" class="block text-sm font-medium mb-1" style="color: #475569;">Username</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <p class="text-sm mt-1" style="color: #E11D48;">{{ form.username.errors|striptags }}</p>
+                    {% endif %}
+                </div>
+                <div class="mb-4">
+                    <label for="id_password1" class="block text-sm font-medium mb-1" style="color: #475569;">Password</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                        <p class="text-sm mt-1" style="color: #E11D48;">{{ form.password1.errors|striptags }}</p>
+                    {% endif %}
+                </div>
+                <div class="mb-4">
+                    <label for="id_password2" class="block text-sm font-medium mb-1" style="color: #475569;">Confirm password</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        <p class="text-sm mt-1" style="color: #E11D48;">{{ form.password2.errors|striptags }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 transition" style="background-color: #2563EB;" onmouseover="this.style.backgroundColor='#1E40AF'" onmouseout="this.style.backgroundColor='#2563EB'">
+                    Sign up
+                </button>
+            </div>
+        </form>
+        <p class="text-sm text-center" style="color: #475569;">Already have an account? <a href="{% url 'login' %}" style="color: #2563EB;">Sign in</a></p>
+    </div>
+</div>
+{% endblock %}

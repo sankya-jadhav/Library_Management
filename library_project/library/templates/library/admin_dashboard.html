@@ -1,0 +1,26 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6" style="color: #475569;">Admin Dashboard</h1>
+
+<div class="grid grid-cols-3 gap-4 mb-6">
+    <div class="bg-white p-6 rounded-md shadow">
+        <p class="text-sm" style="color: #64748b;">Total books</p>
+        <p class="text-2xl font-semibold" style="color: #2563EB;">{{ total_books }}</p>
+    </div>
+    <div class="bg-white p-6 rounded-md shadow">
+        <p class="text-sm" style="color: #64748b;">Available</p>
+        <p class="text-2xl font-semibold" style="color: #22C55E;">{{ available }}</p>
+    </div>
+    <div class="bg-white p-6 rounded-md shadow">
+        <p class="text-sm" style="color: #64748b;">Pending requests</p>
+        <p class="text-2xl font-semibold" style="color: #E11D48;">{{ pending_requests }}</p>
+    </div>
+</div>
+
+<div>
+    <a href="{% url 'admin_pending_requests' %}" class="px-4 py-2 text-white rounded-md transition" style="background-color: #2563EB;" onmouseover="this.style.backgroundColor='#1E40AF'" onmouseout="this.style.backgroundColor='#2563EB'">View pending requests</a>
+    <a href="/admin/" class="ml-2 px-4 py-2 rounded-md transition" style="background-color: #e2e8f0; color: #475569;" onmouseover="this.style.backgroundColor='#cbd5e1'" onmouseout="this.style.backgroundColor='#e2e8f0'">Open Django Admin</a>
+</div>
+
+{% endblock %}

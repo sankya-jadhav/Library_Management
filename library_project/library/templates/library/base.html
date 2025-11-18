@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-sans" style="background-color: #F1F5F9;">
+
+    <!-- Navigation Bar -->
+    <nav style="background-color: #2563EB;" class="shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="text-2xl font-bold text-white">Library</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'book_list' %}" class="px-3 py-2 rounded-md text-sm font-medium transition" style="color: rgba(255,255,255,0.9); background-color: rgba(255,255,255,0.1);" onmouseover="this.style.backgroundColor='rgba(30,64,175,0.3)'" onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)'">All Books</a>
+                        <a href="{% url 'student_profile' %}" class="px-3 py-2 rounded-md text-sm font-medium transition" style="color: rgba(255,255,255,0.9); background-color: rgba(255,255,255,0.1);" onmouseover="this.style.backgroundColor='rgba(30,64,175,0.3)'" onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)'">My Profile</a>
+                        {% if user.is_staff %}
+                            <a href="{% url 'admin_dashboard' %}" class="px-3 py-2 rounded-md text-sm font-medium transition" style="color: rgba(255,255,255,0.9); background-color: rgba(255,255,255,0.1);" onmouseover="this.style.backgroundColor='rgba(30,64,175,0.3)'" onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)'">Admin</a>
+                        {% endif %}
+                        <form action="{% url 'logout' %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="ml-4 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition" style="background-color: #1E40AF;" onmouseover="this.style.backgroundColor='#1E3A8A'" onmouseout="this.style.backgroundColor='#1E40AF'">
+                                Logout
+                            </button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="ml-4 px-4 py-2 mr-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition" style="background-color: #2563EB;" onmouseover="this.style.backgroundColor='#1E40AF'" onmouseout="this.style.backgroundColor='#2563EB'">
+                            Login
+                        </a>
+                        <a href="{% url 'register' %}" class="ml-4 px-4 py-2 mr-2 border border-transparent rounded-md shadow-sm text-sm font-medium transition" style="color: #2563EB; background-color: white;" onmouseover="this.style.backgroundColor='#f0f4f8'" onmouseout="this.style.backgroundColor='white'">
+                            Sign up
+                        </a>
+                        <a href="{% url 'admin_login' %}" class="ml-4 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition" style="background-color: #475569;" onmouseover="this.style.backgroundColor='#334155'" onmouseout="this.style.backgroundColor='#475569'">
+                            Admin
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        
+        <!-- Message Display -->
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class{% if message.tags == 'error' %} "px-4 py-3 rounded-md relative border" style="background-color: #fee2e2; border-color: #fecaca; color: #991b1b;"{% elif message.tags == 'success' %} "px-4 py-3 rounded-md relative border" style="background-color: #f0fdf4; border-color: #86efac; color: #22c55e;"{% else %} "px-4 py-3 rounded-md relative border" style="background-color: #eff6ff; border-color: #bfdbfe; color: #1e40af;"{% endif %} role="alert">
+                        <span class="block sm:inline">{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}
+        <!-- Page specific content goes here -->
+        {% endblock %}
+    </main>
+
+</body>
+</html>

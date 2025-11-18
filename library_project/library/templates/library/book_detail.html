@@ -1,0 +1,76 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+<div class="bg-white shadow overflow-hidden rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+        <h1 class="text-3xl font-bold" style="color: #2563EB;">{{ book.title }}</h1>
+        <p class="mt-1 max-w-2xl text-lg" style="color: #64748b;">{{ book.author|default:"Unknown Author" }}</p>
+    </div>
+    <div style="border-top-color: #e2e8f0;" class="border-t px-4 py-5 sm:p-0">
+        <dl class="sm:divide-y" style="border-color: #e2e8f0;">
+            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium" style="color: #64748b;">ISBN</dt>
+                <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2" style="color: #334155;">{{ book.isbn|default:"N/A" }}</dd>
+            </div>
+            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium" style="color: #64748b;">Category</dt>
+                <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2" style="color: #334155;">{{ book.category|default:"N/A" }}</dd>
+            </div>
+            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium" style="color: #64748b;">Publication Year</dt>
+                <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2" style="color: #334155;">{{ book.publication_year|default:"N/A" }}</dd>
+            </div>
+            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium" style="color: #64748b;">Description</dt>
+                <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2" style="color: #334155;">{{ book.description|default:"No description available."|linebreaksbr }}</dd>
+            </div>
+            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium" style="color: #64748b;">Availability</dt>
+                <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">
+                    {% if book.is_available %}
+                        <span class="px-3 py-0.5 rounded-full text-sm font-medium text-white" style="background-color: #22C55E;">Available</span>
+                    {% else %}
+                        <span class="px-3 py-0.5 rounded-full text-sm font-medium text-white" style="background-color: #E11D48;">Unavailable</span>
+                    {% endif %}
+                </dd>
+            </div>
+            
+            <!-- Action Button -->
+            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium" style="color: #64748b;">Action</dt>
+                <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">
+                    {% if existing_request %}
+                        {% if existing_request.status == 'PENDING' %}
+                            <span class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white" style="background-color: #fbbf24;">
+                                Your request is pending approval
+                            </span>
+                        {% elif existing_request.status == 'APPROVED' %}
+                             <span class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white" style="background-color: #22C55E;">
+                                You have this book
+                            </span>
+                        {% endif %}
+                    {% elif book.is_available %}
+                        <!-- Show request button -->
+                        <form action="{% url 'request_book' book.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white transition" style="background-color: #2563EB;" onmouseover="this.style.backgroundColor='#1E40AF'" onmouseout="this.style.backgroundColor='#2563EB'">
+                                Request to Borrow
+                            </button>
+                        </form>
+                    {% else %}
+                        <!-- Book is unavailable and user does not have it -->
+                        <span class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md" style="background-color: #e2e8f0; color: #475569;">
+                            Book is currently borrowed
+                        </span>
+                    {% endif %}
+                </dd>
+            </div>
+
+        </dl>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'book_list' %}" style="color: #2563EB;" onmouseover="this.style.color='#1E40AF'" onmouseout="this.style.color='#2563EB'">&larr; Back to all books</a>
+</div>
+{% endblock %}

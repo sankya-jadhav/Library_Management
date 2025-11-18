@@ -1,0 +1,113 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6" style="color: #475569;">Available Books</h1>
+
+
+<!-- Visible search bar above filters -->
+<form method="get" class="mb-6">
+    <div class="flex flex-col md:flex-row md:items-center md:space-x-4">
+        <div class="flex-1">
+            <label for="q" class="block text-lg font-semibold mb-2" style="color: #475569;">Search Books</label>
+            <div class="flex">
+                <input id="q" name="q" value="{{ q }}" type="text" placeholder="Search by title, author, ISBN or description" style="border-color: #2563EB;" class="w-full px-4 py-3 border-2 rounded-l-md focus:outline-none focus:ring-2 text-lg" onmouseover="this.style.boxShadow='0 0 0 3px rgba(37, 99, 235, 0.1)'" onmouseout="this.style.boxShadow='none'" />
+                <button type="submit" class="px-6 py-3 text-white font-semibold rounded-r-md transition" style="background-color: #2563EB;" onmouseover="this.style.backgroundColor='#1E40AF'" onmouseout="this.style.backgroundColor='#2563EB'">Search</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<!-- Filtering controls -->
+<form method="get" class="mb-4 bg-white p-4 rounded-md shadow flex flex-col space-y-4">
+    <input type="hidden" name="q" value="{{ q }}" />
+    <div class="flex flex-col md:flex-row md:space-x-4">
+        <div class="mb-3 md:mb-0">
+            <select name="category" style="border-color: #2563EB; color: #334155;" class="px-3 py-2 border rounded-md w-full md:w-auto">
+                <option value="">All categories</option>
+                {% for cat in categories %}
+                    <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3 md:mb-0">
+            <select name="author" style="border-color: #2563EB; color: #334155;" class="px-3 py-2 border rounded-md w-full md:w-auto">
+                <option value="">All authors</option>
+                {% for a in authors %}
+                    <option value="{{ a }}" {% if selected_author == a %}selected{% endif %}>{{ a }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="flex flex-col md:flex-row md:space-x-4 mt-4">
+        <div class="mb-3 md:mb-0">
+            <select name="sort" style="border-color: #2563EB; color: #334155;" class="px-3 py-2 border rounded-md w-full md:w-auto">
+                <option value="title" {% if current_sort == 'title' %}selected{% endif %}>Sort: Title</option>
+                <option value="author" {% if current_sort == 'author' %}selected{% endif %}>Sort: Author</option>
+                <option value="year" {% if current_sort == 'year' %}selected{% endif %}>Sort: Year</option>
+                <option value="available" {% if current_sort == 'available' %}selected{% endif %}>Sort: Availability</option>
+            </select>
+        </div>
+        <div class="mb-3 md:mb-0 flex items-center space-x-2">
+            <label class="inline-flex items-center" style="color: #334155;"><input type="checkbox" name="available" value="1" class="mr-2" {% if selected_available == '1' %}checked{% endif %}/>Only available</label>
+        </div>
+        <div class="mb-3 md:mb-0">
+            <button type="submit" class="px-4 py-2 text-white rounded-md w-full md:w-auto transition" style="background-color: #2563EB;" onmouseover="this.style.backgroundColor='#1E40AF'" onmouseout="this.style.backgroundColor='#2563EB'">Apply</button>
+        </div>
+    </div>
+</form>
+
+<div class="bg-white shadow overflow-hidden rounded-lg">
+    <ul role="list" class="divide-y" style="border-color: #e2e8f0;">
+        {% for book in books %}
+        <li>
+            <a href="{% url 'book_detail' book.pk %}" class="block transition" style="hover: background-color: #f8fafc;">
+                <div class="flex items-center px-4 py-4 sm:px-6">
+                    <div class="min-w-0 flex-1 flex items-center">
+                        <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+                            <div>
+                                <p class="text-lg font-medium truncate" style="color: #2563EB;">{{ book.title }}</p>
+                                <p class="mt-1 flex items-center text-sm" style="color: #64748b;">
+                                    {{ book.author|default:"Unknown Author" }}
+                                </p>
+                            </div>
+                            <div class="hidden md:block">
+                                <div>
+                                    <p class="text-sm" style="color: #334155;">
+                                        Category: {{ book.category|default:"N/A" }}
+                                    </p>
+                                    <p class="mt-1 text-sm" style="color: #64748b;">
+                                        Published: {{ book.publication_year|default:"N/A" }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        {% if book.is_available %}
+                            <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium text-white" style="background-color: #22C55E;">
+                                Available
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium text-white" style="background-color: #E11D48;">
+                                Unavailable
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="ml-4">
+                        <!-- Chevron icon -->
+                        <svg class="h-5 w-5" style="color: #cbd5e1;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+            </a>
+        </li>
+        {% empty %}
+        <li>
+            <p class="text-center py-6" style="color: #64748b;">No books found in the library.</p>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
